@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<StackPane prefHeight="268.0" prefWidth="454.0" style="-fx-background-color: linear-gradient(to bottom, #7daf8d, #ceedcb, #ade8c0, #618165);" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LoginController">
+
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+
+    <children>
+
+        <Label alignment="CENTER" prefHeight="46.0" prefWidth="227.0" style="-fx-font-weight: bold;" text="WELCOME!" textAlignment="CENTER" textFill="#2626b5">
+
+            <font>
+                <Font name="Calibri Bold Italic" size="40.0" />
+            </font>
+
+            <effect>
+                <Bloom threshold="0.83">
+                    <input>
+                        <DropShadow height="19.79" offsetX="3.0" offsetY="4.0" radius="8.34" spread="0.35" width="15.57">
+
+                            <color>
+                                <Color red="0.41179338097572327" green="0.6524285078048706" blue="0.6842105388641357" />
+                            </color>
+
+                        </DropShadow>
+                    </input>
+                </Bloom>
+            </effect>
+
+        </Label>
+
+        <Button onAction="#handleClose" prefHeight="37.0" prefWidth="39.0" style="-fx-background-color: linear-gradient(to bottom, #ff6b6b, #c9184a);                        -fx-background-radius: 30;                        -fx-cursor: hand;                        -fx-font-size: 14px;                        -fx-font-weight: bold;                        -fx-border-radius: 30;                        -fx-border-color: rgba(255,255,255,0.25);                        -fx-border-width: 1;" text="✕" textFill="WHITE" StackPane.alignment="TOP_RIGHT">
+
+            <effect>
+                <DropShadow color="#ffb3c1" radius="12" spread="0.2" />
+            </effect>
+
+            <font>
+                <Font name="Segoe UI Symbol" size="14" />
+            </font>
+
+        </Button>
+
+    </children>
+
+</StackPane>
