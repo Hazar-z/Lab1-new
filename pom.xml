@@ -81,10 +81,7 @@
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>UsersApp</mainClass>
-                    <options>
-                        <option>--add-modules</option>
-                        <option>javafx.controls,javafx.fxml</option>
-                    </options>
+                    <commandlineArgs>3 10</commandlineArgs>
                 </configuration>
                 <executions>
                     <execution>

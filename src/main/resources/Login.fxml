@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="357.0" prefWidth="408.0" spacing="15.0" style="-fx-background-color: linear-gradient(to bottom, #f8f8f8, #557a59); -fx-effect: dropshadow(gaussian, rgb(118 135 118), 10, 0.5, 0, 0); -fx-background-radius: 20;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LoginController">
+<VBox alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="357.0" prefWidth="408.0" spacing="15.0" style="-fx-background-color: linear-gradient(to bottom, #f8f8f8, #557a59); -fx-effect: dropshadow(gaussian, rgb(118, 135, 118), 10, 0.5, 0, 0); -fx-background-radius: 20;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LoginController">
     <padding>
         <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
     </padding>
@@ -46,7 +46,7 @@
             <Insets />
         </VBox.margin></PasswordField>
 
-    <Button cache="true" onAction="#handleLogin" prefHeight="23.0" prefWidth="121.0" style="-fx-background-color: #058837;" text="Login" textFill="WHITE">
+    <Button fx:id="loginButton" cache="true" onAction="#handleLogin" prefHeight="23.0" prefWidth="121.0" style="-fx-background-color: #058837;" text="Login" textFill="WHITE">
         <font>
             <Font size="13.0" />
         </font>

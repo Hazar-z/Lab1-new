@@ -2,14 +2,28 @@ public class User implements Comparable<User> {
     private String username;
     private String password;
 
+    private int failedAttempts;
+    private boolean blocked;
+    private long blockedTime;
+
     public User(String username, String password) {
-        validateUsername(username); //בדיקת תקינות שם המשתמש
-        validatePassword(password); //בדיקת תקינות הסיסמה
+        validateUsername(username);
+        validatePassword(password);
+
         this.username = username;
         this.password = password;
+
+        this.failedAttempts = 0;
+        this.blocked = false;
+        this.blockedTime = 0;
     }
 
     public String getUsername() {
+        return username;
+    }
+
+    // optional, useful if your other code uses getEmail()
+    public String getEmail() {
         return username;
     }
 
@@ -17,44 +31,75 @@ public class User implements Comparable<User> {
         return password;
     }
 
+    public synchronized int getFailedAttempts() {
+        return failedAttempts;
+    }
+
+    public synchronized void increaseFailedAttempts() {
+        failedAttempts++;
+    }
+
+    public synchronized void resetFailedAttempts() {
+        failedAttempts = 0;
+    }
+
+    public synchronized boolean isBlocked() {
+        return blocked;
+    }
+
+    public synchronized long getBlockedTime() {
+        return blockedTime;
+    }
+
+    public synchronized void blockUser() {
+        blocked = true;
+        blockedTime = System.currentTimeMillis();
+    }
+
+    public synchronized void unlockUser() {
+        blocked = false;
+        blockedTime = 0;
+        failedAttempts = 0;
+    }
+
     private void validateUsername(String username) {
-        if (username == null || username.isEmpty()) {//בדיקת אם השם NULL או ריק
+        if (username == null || username.isEmpty()) {
             throw new IllegalArgumentException("Please enter a valid Email as username");
         }
 
-        if (username.length() > 50) {//בדיקת שהאורך לא גדול מדי (יותר מ 50 תווים)
+        if (username.length() > 50) {
             throw new IllegalArgumentException("Username is too long, try something shorter");
         }
 
-        if (!isValidEmail(username)) {//בדיקת תקינות האימייל
+        if (!isValidEmail(username)) {
             throw new IllegalArgumentException("Please enter a valid Email as username");
         }
     }
 
     private void validatePassword(String password) {
-        if (password == null) {//בדיקת אם הסיסמה NULL
+        if (password == null) {
             throw new IllegalArgumentException("Pleas enter a valid password.");
         }
 
-        if (password.length() < 8) {//בדיקת שהסיסמה לא קצרה מדי (פחות מ 8 תווים)
+        if (password.length() < 8) {
             throw new IllegalArgumentException("Your password is too short, add more characters");
         }
 
-        if (password.length() > 12) {//בדיקת שהסיסמה לא ארוכה מדי (יותר מ 12 תווים)
+        if (password.length() > 12) {
             throw new IllegalArgumentException("Your password is too long, try a shorter one");
         }
 
-        if (!isValidPassword(password)) {//בדיקת תקינות  תוכן הסיסמה
+        if (!isValidPassword(password)) {
             throw new IllegalArgumentException("Pleas enter a valid password.");
         }
     }
 
     private boolean isValidEmail(String email) {
-        int atIndex = email.indexOf('@');//בדיקת מיקום התו @
-        int lastDotIndex = email.lastIndexOf('.');//בדיקת מיקום התו . האחרון
+        int atIndex = email.indexOf('@');
+        int lastDotIndex = email.lastIndexOf('.');
 
         if (atIndex <= 0 || lastDotIndex <= atIndex + 1 || lastDotIndex == email.length() - 1) {
-            return false;//בדיקת מיקום התווים @ ו . והאם הם נמצאים במקומות תקינים
+            return false;
         }
 
         String part1 = email.substring(0, atIndex);
@@ -62,13 +107,13 @@ public class User implements Comparable<User> {
         String part3 = email.substring(lastDotIndex + 1);
 
         if (part1.isEmpty() || part2.isEmpty() || part3.isEmpty()) {
-            return false;//בדיקת שהחלקים של האימייל לא ריקים
+            return false;
         }
 
         for (int i = 0; i < part1.length(); i++) {
             char ch = part1.charAt(i);
             if (!(Character.isLetterOrDigit(ch) || ch == '.' || ch == '_' || ch == '-' || ch == '+' || ch == '%')) {
-                return false;//בדיקת תקינות התווים בחלק הראשון של האימייל
+                return false;
             }
         }
 
@@ -79,21 +124,21 @@ public class User implements Comparable<User> {
         for (int i = 0; i < part2.length(); i++) {
             char ch = part2.charAt(i);
             if (!(Character.isLetterOrDigit(ch) || ch == '.' || ch == '-')) {
-                return false;//בדיקת תקינות התווים בחלק השני של האימייל
+                return false;
             }
         }
 
         if (part3.length() < 2) {
-            return false;//לוודות שהסיומת מינמום 2 תווים
+            return false;
         }
 
         for (int i = 0; i < part3.length(); i++) {
             if (!Character.isLetter(part3.charAt(i))) {
-                return false;//לוודות שהסיומת מכילה רק אותיות
+                return false;
             }
         }
 
-        return true;//אם כל הבדיקות עברו בהצלחה, האימייל תקין
+        return true;
     }
 
     private boolean isValidPassword(String password) {
@@ -105,33 +150,28 @@ public class User implements Comparable<User> {
             char ch = password.charAt(i);
 
             if (Character.isLetter(ch)) {
-                hasLetter = true;//בדיקת אם יש לפחות אות אחת
+                hasLetter = true;
             } else if (Character.isDigit(ch)) {
-                hasDigit = true;//בדיקת אם יש לפחות ספרה אחת
-            } else if (ch == '#' || ch == '@' || ch == '!' || ch == '+'||  ch == '='|| ch == '$' || ch == '%' || ch == '^' || ch == '&' || ch == '*' || ch == '(' || ch == ')' || ch == '-' || ch == '_' ) {
-                hasSymbol = true;//בדיקת אם יש לפחות סימן אחד
+                hasDigit = true;
+            } else if (ch == '#' || ch == '@' || ch == '!' || ch == '+' || ch == '=' ||
+                    ch == '$' || ch == '%' || ch == '^' || ch == '&' || ch == '*' ||
+                    ch == '(' || ch == ')' || ch == '-' || ch == '_') {
+                hasSymbol = true;
             } else {
-                return false; // any other character is not allowed
+                return false;
             }
         }
 
-        return hasLetter && hasDigit && hasSymbol;//password is valid if it has at least one letter, one digit, and one symbol
+        return hasLetter && hasDigit && hasSymbol;
     }
-
 
     @Override
     public int compareTo(User other) {
-        // השוואה בין משתמשים לפי שם המשתמש (לפי סדר אלפביתי)
-        // משמש למיון רשימת משתמשים באמצעות Collections.sort
-
         return this.username.compareTo(other.username);
     }
 
     @Override
     public String toString() {
-        // קובע איך האובייקט יודפס כאשר משתמשים ב- System.out.println
-        // מחזיר מחרוזת שמכילה את שם המשתמש והסיסמה
-
         return username + " " + password;
     }
 }
