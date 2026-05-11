@@ -156,7 +156,7 @@ public class UsersApp extends Application {
     public static void openWelcomeWindow() {
         try {
             Parent root = FXMLLoader.load(UsersApp.class.getResource("/Welcome.fxml"));
-            Scene welcomeScene = new Scene(root, 300, 180);
+            Scene welcomeScene = new Scene(root, 430, 600);
             Stage welcomeStage = new Stage();
 
             welcomeStage.setTitle("Welcome");
@@ -184,7 +184,7 @@ public class UsersApp extends Application {
         users = loadUsersFromFile("users.txt");
 
         Parent root = FXMLLoader.load(getClass().getResource("/Login.fxml"));
-        Scene scene = new Scene(root, 360, 260);
+        Scene scene = new Scene(root, 430, 600);
 
         loginStage = primaryStage;
         primaryStage.setTitle("Login");

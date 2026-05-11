@@ -1,41 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.Bloom?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
 
-<StackPane prefHeight="268.0" prefWidth="454.0" style="-fx-background-color: linear-gradient(to bottom, #7daf8d, #ceedcb, #ade8c0, #618165);" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LoginController">
+<StackPane minHeight="600.0" minWidth="400.0" prefHeight="268.0" prefWidth="454.0" style="-fx-background-color: linear-gradient(to bottom, #d1eaf0 0%, #5b8ab5 70%, #1a2a44 100%); -fx-background-radius: 25; -fx-border-radius: 25; -fx-border-color: #ececec;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LoginController">
 
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
 
     <children>
-
-        <Label alignment="CENTER" prefHeight="46.0" prefWidth="227.0" style="-fx-font-weight: bold;" text="WELCOME!" textAlignment="CENTER" textFill="#2626b5">
-
-            <font>
-                <Font name="Calibri Bold Italic" size="40.0" />
-            </font>
-
-            <effect>
-                <Bloom threshold="0.83">
-                    <input>
-                        <DropShadow height="19.79" offsetX="3.0" offsetY="4.0" radius="8.34" spread="0.35" width="15.57">
-
-                            <color>
-                                <Color red="0.41179338097572327" green="0.6524285078048706" blue="0.6842105388641357" />
-                            </color>
-
-                        </DropShadow>
-                    </input>
-                </Bloom>
-            </effect>
-
-        </Label>
 
         <Button onAction="#handleClose" prefHeight="37.0" prefWidth="39.0" style="-fx-background-color: linear-gradient(to bottom, #ff6b6b, #c9184a);                        -fx-background-radius: 30;                        -fx-cursor: hand;                        -fx-font-size: 14px;                        -fx-font-weight: bold;                        -fx-border-radius: 30;                        -fx-border-color: rgba(255,255,255,0.25);                        -fx-border-width: 1;" text="✕" textFill="WHITE" StackPane.alignment="TOP_RIGHT">
 
@@ -48,6 +27,20 @@
             </font>
 
         </Button>
+
+        <Label alignment="CENTER" prefHeight="46.0" prefWidth="227.0" style="-fx-text-fill: #d1eaf0;" text="WELCOME!" textAlignment="CENTER" textFill="#9ca8b5">
+
+            <font>
+                <Font name="Segoe UI Bold" size="40.0" />
+            </font>
+         <effect>
+            <Bloom threshold="0.56" />
+         </effect>
+         <StackPane.margin>
+            <Insets top="-120.0" />
+         </StackPane.margin>
+
+        </Label>
 
     </children>
 

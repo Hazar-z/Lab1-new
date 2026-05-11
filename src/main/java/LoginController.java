@@ -43,9 +43,28 @@ public class LoginController {
         UsersApp.dispatchLoginAttempt(userName, password, new UsersApp.LoginAttemptCallbacks() {
             @Override
             public void onWelcome() {
-                errorLabel.setText("");
-                UsersApp.openWelcomeWindow();
-                loginButton.setDisable(false);
+                Platform.runLater(() -> {
+                    errorLabel.setText("");
+
+                    // 1. Get the current root container (the VBox)
+                    javafx.scene.Parent root = loginButton.getScene().getRoot();
+
+                    // 2. Create a Fade Out transition
+                    javafx.animation.FadeTransition fadeOut = new javafx.animation.FadeTransition(
+                            javafx.util.Duration.millis(600), root
+                    );
+                    fadeOut.setFromValue(1.0);
+                    fadeOut.setToValue(0.0);
+
+                    // 3. When the fade is finished, open the new window
+                    fadeOut.setOnFinished(e -> {
+                        UsersApp.openWelcomeWindow();
+                        // Note: If openWelcomeWindow closes the current stage,
+                        // the transition ends cleanly here.
+                    });
+
+                    fadeOut.play();
+                });
             }
 
             @Override
