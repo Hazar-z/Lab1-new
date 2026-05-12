@@ -20,7 +20,6 @@ public class LoginController {
 
     @FXML
     public void initialize() {
-        // FIXED: Added null check to prevent crash when Welcome.fxml is loaded
         if (userNameField != null) {
             userNameField.textProperty().addListener((observable, oldValue, newValue) -> {
                 if (errorLabel != null) {
@@ -72,26 +71,29 @@ public class LoginController {
             }
 
             @Override
-            public void onInvalidCredentials() {
+            public void onInvalidCredentials(int attemptsMade, int maxAttempts) {
                 Platform.runLater(() -> {
-                    errorLabel.setText("Invalid Username or Password.");
+                    int remaining = maxAttempts - attemptsMade;
+                    errorLabel.setText("Invalid Login. " + remaining + " attempts remaining.");
                     loginButton.setDisable(false);
                 });
             }
 
             @Override
-            public void onLockoutWithWait() {
+            public void onLockoutWithWait(int secondsToWait) {
                 Platform.runLater(() -> {
-                    // Requirement 3: Prevent thread spamming (handled in UsersApp logic)
-                    errorLabel.setText("Too Many Failed Attempts. Account Locked. Please Wait...");
-                    // Requirement 2: Keep button enabled for other users
+                    // This satisfies the requirement to show the wait time on screen
+                    errorLabel.setText("Locked! Please wait " + secondsToWait + " seconds.");
+                    // Requirement: Prevent thread spamming (handled in UsersApp logic)
+                    // Use UsersApp.getLockDurationSeconds() to show the actual time
+                    //errorLabel.setText("Account Locked. Please wait " + UsersApp.getLockDurationSeconds() + " seconds.");
+                    // Requirement: Keep button enabled for other users
                     loginButton.setDisable(false);
                 });
             }
 
             @Override
             public void onAccountLocked(int secondsRemaining) {
-                // Fixed the anonymous class error by including this required method
                 Platform.runLater(() -> {
                     errorLabel.setText("This account is currently locked.");
                 });

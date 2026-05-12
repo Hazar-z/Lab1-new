@@ -12,10 +12,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class UsersApp extends Application {
-
     private static ArrayList<User> users = new ArrayList<>();
     private static Stage loginStage;
-
     private static int maxFailedAttempts = 3;
     private static int lockDurationSeconds = 60;
 
@@ -94,7 +92,8 @@ public class UsersApp extends Application {
     }
 
     public static void startFailedAttemptThread(User user, LoginAttemptCallbacks callbacks) {
-        FailedAttemptsThread thread = new FailedAttemptsThread(user, maxFailedAttempts);
+        // Updated to pass lockDurationSeconds to the thread for printing
+        FailedAttemptsThread thread = new FailedAttemptsThread(user, maxFailedAttempts, lockDurationSeconds);
         thread.start();
 
         try {
@@ -107,9 +106,13 @@ public class UsersApp extends Application {
         if (user.isBlocked()) {
             // Requirement 3: Start the timer thread ONLY ONCE at the moment of blocking
             startBlockedCheckThread(user, callbacks);
-            Platform.runLater(callbacks::onLockoutWithWait);
+            // Pass the lock duration to the UI
+            Platform.runLater(() -> callbacks.onLockoutWithWait(lockDurationSeconds));
+           // Platform.runLater(callbacks::onLockoutWithWait);
         } else {
-            Platform.runLater(callbacks::onInvalidCredentials);
+            // Pass current attempts and max allowed to the UI
+            Platform.runLater(() -> callbacks.onInvalidCredentials(user.getFailedAttempts(), maxFailedAttempts));
+            //Platform.runLater(callbacks::onInvalidCredentials);
         }
     }
 
@@ -117,14 +120,14 @@ public class UsersApp extends Application {
         User user = findUserByLogin(username);
 
         if (user == null) {
-            Platform.runLater(callbacks::onInvalidCredentials);
+            Platform.runLater(() -> callbacks.onInvalidCredentials(0, maxFailedAttempts));
             return;
         }
 
         // Requirement 3: If already blocked, just show the message.
         // Do NOT start a new thread.
         if (user.isBlocked()) {
-            Platform.runLater(callbacks::onLockoutWithWait);
+            Platform.runLater(() -> callbacks.onLockoutWithWait(lockDurationSeconds));
             return;
         }
 
@@ -200,11 +203,11 @@ public class UsersApp extends Application {
     public interface LoginAttemptCallbacks {
         void onWelcome();
 
-        void onInvalidCredentials();
+        void onInvalidCredentials(int attemptsMade, int maxAttempts);
 
         void onAccountLocked(int secondsRemaining);
 
-        void onLockoutWithWait();
+        void onLockoutWithWait(int secondsToWait);
 
         void onLockoutEnded();
     }

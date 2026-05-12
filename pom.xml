@@ -81,7 +81,8 @@
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>UsersApp</mainClass>
-                    <commandlineArgs>3 100</commandlineArgs>
+                    // Here we change the parameters of the number of attemps and lockout time (respectivly)
+                    <commandlineArgs>3 20</commandlineArgs>
                 </configuration>
                 <executions>
                     <execution>
