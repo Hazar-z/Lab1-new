@@ -81,7 +81,7 @@
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>UsersApp</mainClass>
-                    <commandlineArgs>3 10</commandlineArgs>
+                    <commandlineArgs>3 100</commandlineArgs>
                 </configuration>
                 <executions>
                     <execution>

@@ -83,20 +83,17 @@ public class UsersApp extends Application {
     }
 
     public static void startBlockedCheckThread(User user, LoginAttemptCallbacks callbacks) {
-        CheckBlockedThread thread = new CheckBlockedThread(user, lockDurationSeconds);
-
-        thread.start();
-
-        if (thread.isAllowedToLogin()) {
-            Platform.runLater(callbacks::onWelcome);
+        // Only start the thread if one isn't already running for this specific user
+        if (!user.isTimerRunning()) {
+            user.setTimerRunning(true);
+            CheckBlockedThread thread = new CheckBlockedThread(user, lockDurationSeconds, callbacks);
+            thread.start();
         } else {
-            Platform.runLater(callbacks::onAccountLocked);
+            System.out.println("Timer already running for " + user.getEmail());
         }
     }
 
     public static void startFailedAttemptThread(User user, LoginAttemptCallbacks callbacks) {
-        int before = user.getFailedAttempts();
-
         FailedAttemptsThread thread = new FailedAttemptsThread(user, maxFailedAttempts);
         thread.start();
 
@@ -104,45 +101,31 @@ public class UsersApp extends Application {
             thread.join();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            Platform.runLater(callbacks::onInvalidCredentials);
             return;
         }
 
-        int after = user.getFailedAttempts();
-
-        System.out.println("Username: " + user.getEmail());
-        System.out.println("Failed attempts before: " + before);
-        System.out.println("Failed attempts after: " + after);
-        System.out.println("Max attempts: " + maxFailedAttempts);
-        System.out.println("Blocked: " + user.isBlocked());
-        System.out.println("Blocked time: " + user.getBlockedTime());
-
         if (user.isBlocked()) {
+            // Requirement 3: Start the timer thread ONLY ONCE at the moment of blocking
+            startBlockedCheckThread(user, callbacks);
             Platform.runLater(callbacks::onLockoutWithWait);
         } else {
             Platform.runLater(callbacks::onInvalidCredentials);
         }
     }
 
-    public static void dispatchLoginAttempt(String userName, String password, LoginAttemptCallbacks callbacks) {
-        User user = findUserByLogin(userName);
+    public static void dispatchLoginAttempt(String username, String password, LoginAttemptCallbacks callbacks) {
+        User user = findUserByLogin(username);
 
         if (user == null) {
             Platform.runLater(callbacks::onInvalidCredentials);
             return;
         }
 
+        // Requirement 3: If already blocked, just show the message.
+        // Do NOT start a new thread.
         if (user.isBlocked()) {
-            long now = System.currentTimeMillis();
-            long passedTime = now - user.getBlockedTime();
-            long lockMillis = lockDurationSeconds * 1000L;
-
-            if (passedTime >= lockMillis) {
-                user.unlockUser();
-            } else {
-                Platform.runLater(callbacks::onAccountLocked);
-                return;
-            }
+            Platform.runLater(callbacks::onLockoutWithWait);
+            return;
         }
 
         if (user.getPassword().equals(password)) {
@@ -152,7 +135,6 @@ public class UsersApp extends Application {
             startFailedAttemptThread(user, callbacks);
         }
     }
-
     public static void openWelcomeWindow() {
         try {
             Parent root = FXMLLoader.load(UsersApp.class.getResource("/Welcome.fxml"));
@@ -220,7 +202,7 @@ public class UsersApp extends Application {
 
         void onInvalidCredentials();
 
-        void onAccountLocked();
+        void onAccountLocked(int secondsRemaining);
 
         void onLockoutWithWait();
 

@@ -1,87 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.AmbientLight?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" minHeight="560.0" minWidth="400.0" nodeOrientation="LEFT_TO_RIGHT" spacing="15.0" style="-fx-background-color: linear-gradient(to bottom, #d1eaf0 0%, #5b8ab5 70%, #1a2a44 100%); -fx-effect: dropshadow(gaussian, rgb(118, 135, 118), 10, 0.5, 0, 0); -fx-background-radius: 25; -fx-border-radius: 25; -fx-border-color: #ececec; -fx-spacing: 20;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LoginController">
+<VBox alignment="CENTER" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" spacing="15.0" style="-fx-background-color: linear-gradient(to bottom, #d1eaf0 0%, #5b8ab5 70%, #1a2a44 100%); -fx-effect: dropshadow(gaussian, rgb(5, 1, 78), 10, 0.5, 0, 0); -fx-background-radius: 25; -fx-border-radius: 25; -fx-border-color: #ececec; -fx-spacing: 20;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LoginController">
     <padding>
         <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
     </padding>
-    <HBox alignment="CENTER_RIGHT" cache="true" prefHeight="32.0" prefWidth="95.0" style="-fx-background-radius: 50;">
-        <Button onAction="#handleClose" prefHeight="56.0" prefWidth="37.0" style="             -fx-background-color: linear-gradient(to bottom, #ff6b6b, #c9184a);             -fx-background-radius: 30;             -fx-cursor: hand;             -fx-font-size: 14px;             -fx-font-weight: bold;             -fx-border-radius: 30;             -fx-border-color: rgba(255,255,255,0.25);             -fx-border-width: 1;         " text="✕" textFill="WHITE" StackPane.alignment="TOP_RIGHT">
 
-            <effect>
-                <DropShadow color="#ffb3c1" radius="12" spread="0.2" />
-            </effect>
-
-            <font>
-                <Font name="Segoe UI Symbol" size="14" />
-            </font>
-
-        </Button>
-      <VBox.margin>
-         <Insets right="10.0" top="10.0" />
-      </VBox.margin>
+    <HBox alignment="TOP_RIGHT" prefWidth="200.0">
+        <children>
+            <Button onAction="#handleClose" prefHeight="37.0" prefWidth="39.0" style="-fx-background-color: linear-gradient(to bottom, #ff6b6b, #c9184a); -fx-background-radius: 30; -fx-cursor: hand; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-radius: 30; -fx-border-color: rgba(255,255,255,0.25); -fx-border-width: 1;" text="✕" textFill="WHITE">
+                <effect>
+                    <DropShadow color="#ffb3c1" radius="12" spread="0.2" />
+                </effect>
+                <font>
+                    <Font name="Segoe UI Symbol" size="14" />
+                </font>
+            </Button>
+        </children>
+        <VBox.margin>
+            <Insets bottom="30.0" right="-15.0" top="-30.0" />
+        </VBox.margin>
     </HBox>
-    <Label alignment="CENTER_LEFT" contentDisplay="CENTER" prefHeight="30.0" prefWidth="220.0" text="Log in to Your Account" textAlignment="CENTER" textFill="#1c6ed2">
+
+    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="30.0" prefWidth="250.0" text="Log in to Your Account" textAlignment="CENTER" textFill="#1c6ed2">
         <font>
             <Font name="Segoe UI Bold" size="19.0" />
         </font>
         <effect>
-         <DropShadow height="36.57" radius="19.7325" spread="0.11" width="44.36">
-            <color>
-               <Color red="0.41065627336502075" green="0.6982889175415039" blue="0.8421052694320679" />
-            </color>
-         </DropShadow>
-        </effect></Label>
+            <DropShadow height="36.57" radius="19.7325" spread="0.11" width="44.36">
+                <color>
+                    <Color red="0.4106" green="0.6983" blue="0.8421" />
+                </color>
+            </DropShadow>
+        </effect>
+    </Label>
 
     <TextField fx:id="userNameField" maxWidth="220.0" promptText="Username" style="-fx-background-radius: 20;">
         <font>
             <Font name="System Bold Italic" size="13.0" />
-        </font></TextField>
+        </font>
+    </TextField>
 
     <PasswordField fx:id="passwordField" maxWidth="220.0" promptText="Password" style="-fx-background-radius: 20;">
         <font>
             <Font name="System Bold Italic" size="13.0" />
         </font>
-        <VBox.margin>
-            <Insets />
-        </VBox.margin></PasswordField>
+    </PasswordField>
 
-    <Button fx:id="loginButton" cache="true" onAction="#handleLogin" prefHeight="30.0" prefWidth="110.0" style="-fx-background-color: linear-gradient(to bottom, #ff9a8b, #ff6a88); -fx-background-radius: 20; -fx-cursor: hand;" text="Login" textFill="WHITE">
+    <Button fx:id="loginButton" cache="true" onAction="#handleLogin" prefHeight="35.0" prefWidth="130.0" style="-fx-background-color: linear-gradient(to bottom, #ff9a8b, #ff6a88); -fx-background-radius: 20; -fx-cursor: hand;" text="Login" textFill="WHITE">
         <font>
-            <Font name="Segoe UI Bold" size="13.0" />
+            <Font name="Segoe UI Bold" size="14.0" />
         </font>
         <effect>
-         <DropShadow height="28.79" offsetY="2.0" radius="18.275" spread="0.17" width="46.31">
-            <color>
-               <Color red="0.7123673558235168" green="0.7490975260734558" blue="0.7719298005104065" />
-            </color>
-         </DropShadow>
+            <DropShadow height="20.0" offsetY="2.0" radius="10.0" spread="0.1" width="20.0">
+                <color>
+                    <Color red="0.2" green="0.2" blue="0.2" opacity="0.3" />
+                </color>
+            </DropShadow>
         </effect>
-      <VBox.margin>
-         <Insets />
-      </VBox.margin></Button>
-    <AmbientLight color="CHARTREUSE" lightOn="true" />
+    </Button>
 
-    <Label fx:id="errorLabel" prefHeight="20.0" prefWidth="330.0" textFill="#f7f7f7d0">
-      <font>
-         <Font name="Segoe UI Bold" size="14.0" />
-      </font></Label>
-    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-   <effect>
-      <DropShadow />
-   </effect>
-
+    <Label fx:id="errorLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="30.0" textAlignment="CENTER" textFill="#f7f7f7">
+        <font>
+            <Font name="Segoe UI Bold" size="14.0" />
+        </font>
+    </Label>
 </VBox>

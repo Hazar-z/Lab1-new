@@ -2,76 +2,45 @@ public class CheckBlockedThread extends Thread {
 
     private final User user;
     private final int blockTimeSeconds;
-    private boolean allowedToLogin;
+    private final UsersApp.LoginAttemptCallbacks callbacks;
 
-    public CheckBlockedThread(User user, int blockTimeSeconds) {
+    public CheckBlockedThread(User user, int blockTimeSeconds, UsersApp.LoginAttemptCallbacks callbacks) {
         this.user = user;
         this.blockTimeSeconds = blockTimeSeconds;
-        this.allowedToLogin = false;
-
+        this.callbacks = callbacks;
         setName("CheckBlockedThread-" + user.getEmail());
     }
 
     @Override
     public void run() {
+        try {
+            long remainingMillis;
 
-        synchronized (user) {
-
-            if (!user.isBlocked()) {
-                allowedToLogin = true;
-                return;
+            synchronized (user) {
+                long now = System.currentTimeMillis();
+                long passedTime = now - user.getBlockedTime();
+                long blockTimeMillis = blockTimeSeconds * 1000L;
+                remainingMillis = blockTimeMillis - passedTime;
             }
 
-            long now = System.currentTimeMillis();
+            // Requirement 1 & 3: Wait silently for the full duration
+            if (remainingMillis > 0) {
+                Thread.sleep(remainingMillis);
+            }
 
-            long passedTime =
-                    now - user.getBlockedTime();
-
-            long blockTimeMillis =
-                    blockTimeSeconds * 1000L;
-
-            if (passedTime >= blockTimeMillis) {
-
+            synchronized (user) {
                 user.unlockUser();
-
-                allowedToLogin = true;
-
-            } else {
-
-                try {
-
-                    Thread.sleep(blockTimeMillis - passedTime);
-
-                    user.unlockUser();
-
-                    allowedToLogin = true;
-
-                } catch (InterruptedException e) {
-
-                    Thread.currentThread().interrupt();
-
-                    allowedToLogin = false;
-                }
             }
 
-            System.out.println("Thread name: "
-                    + Thread.currentThread().getName());
+            // Requirement 1: Inform the UI that the lockout is over
+            javafx.application.Platform.runLater(callbacks::onLockoutEnded);
 
-            System.out.println("Username: "
-                    + user.getEmail());
-
-            System.out.println("Blocked: "
-                    + user.isBlocked());
-
-            System.out.println("Blocked time: "
-                    + user.getBlockedTime());
-
-            System.out.println("Allowed to login: "
-                    + allowedToLogin);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } finally {
+            synchronized (user) {
+                user.setTimerRunning(false);
+            }
         }
     }
-
-    public boolean isAllowedToLogin() {
-        return allowedToLogin;
-    }
-}
+} // This is the end of the class

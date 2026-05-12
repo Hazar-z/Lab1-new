@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<StackPane minHeight="600.0" minWidth="400.0" prefHeight="268.0" prefWidth="454.0" style="-fx-background-color: linear-gradient(to bottom, #d1eaf0 0%, #5b8ab5 70%, #1a2a44 100%); -fx-background-radius: 25; -fx-border-radius: 25; -fx-border-color: #ececec;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LoginController">
+<StackPane minHeight="400.0" minWidth="600.0" style="-fx-background-color: linear-gradient(to bottom, #d1eaf0 0%, #5b8ab5 70%, #1a2a44 100%); -fx-background-radius: 25; -fx-border-radius: 25; -fx-border-color: #ececec;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LoginController">
 
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -25,6 +25,9 @@
             <font>
                 <Font name="Segoe UI Symbol" size="14" />
             </font>
+         <StackPane.margin>
+            <Insets right="10.0" top="10.0" />
+         </StackPane.margin>
 
         </Button>
 

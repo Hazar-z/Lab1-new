@@ -5,7 +5,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.application.Platform;
 
-
 public class LoginController {
     @FXML
     private TextField userNameField;
@@ -20,6 +19,18 @@ public class LoginController {
     private Button loginButton;
 
     @FXML
+    public void initialize() {
+        // FIXED: Added null check to prevent crash when Welcome.fxml is loaded
+        if (userNameField != null) {
+            userNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (errorLabel != null) {
+                    errorLabel.setText("");
+                }
+            });
+        }
+    }
+
+    @FXML
     private void handleClose() {
         Platform.exit();
         System.exit(0);
@@ -31,36 +42,29 @@ public class LoginController {
         String password = passwordField.getText() == null ? "" : passwordField.getText();
 
         if (userName.isEmpty() || password.isEmpty()) {
-            errorLabel.setText("Please enter username and password.");
-            errorLabel.setStyle("-fx-text-fill: red;");
+            errorLabel.setText("Invalid Username or Password.");
+            errorLabel.setStyle("-fx-text-fill: #f7f7f7;");
             return;
         }
 
-        // loginButton.setDisable(true);
         errorLabel.setText("");
-        errorLabel.setStyle("-fx-text-fill: #c62828;");
+        errorLabel.setStyle("-fx-text-fill: #f7f7f7;");
 
         UsersApp.dispatchLoginAttempt(userName, password, new UsersApp.LoginAttemptCallbacks() {
             @Override
             public void onWelcome() {
                 Platform.runLater(() -> {
                     errorLabel.setText("");
-
-                    // 1. Get the current root container (the VBox)
                     javafx.scene.Parent root = loginButton.getScene().getRoot();
 
-                    // 2. Create a Fade Out transition
                     javafx.animation.FadeTransition fadeOut = new javafx.animation.FadeTransition(
                             javafx.util.Duration.millis(600), root
                     );
                     fadeOut.setFromValue(1.0);
                     fadeOut.setToValue(0.0);
 
-                    // 3. When the fade is finished, open the new window
                     fadeOut.setOnFinished(e -> {
                         UsersApp.openWelcomeWindow();
-                        // Note: If openWelcomeWindow closes the current stage,
-                        // the transition ends cleanly here.
                     });
 
                     fadeOut.play();
@@ -69,32 +73,37 @@ public class LoginController {
 
             @Override
             public void onInvalidCredentials() {
-                errorLabel.setText("Invalid username or password.");
-                errorLabel.setStyle("-fx-text-fill: red;");
-                loginButton.setDisable(false);
-            }
-
-            @Override
-            public void onAccountLocked() {
-                int t = UsersApp.getLockDurationSeconds();
-                errorLabel.setText("This account is temporarily locked. Try again in up to " + t + " seconds.");
-                errorLabel.setStyle("-fx-text-fill: red;");
-                loginButton.setDisable(false);
+                Platform.runLater(() -> {
+                    errorLabel.setText("Invalid Username or Password.");
+                    loginButton.setDisable(false);
+                });
             }
 
             @Override
             public void onLockoutWithWait() {
-                int t = UsersApp.getLockDurationSeconds();
-                errorLabel.setText("Too many failed attempts. Locked for " + t + " seconds. Please wait...");
-                errorLabel.setStyle("-fx-text-fill: red;");
-                //loginButton.setDisable(true);
+                Platform.runLater(() -> {
+                    // Requirement 3: Prevent thread spamming (handled in UsersApp logic)
+                    errorLabel.setText("Too Many Failed Attempts. Account Locked. Please Wait...");
+                    // Requirement 2: Keep button enabled for other users
+                    loginButton.setDisable(false);
+                });
+            }
+
+            @Override
+            public void onAccountLocked(int secondsRemaining) {
+                // Fixed the anonymous class error by including this required method
+                Platform.runLater(() -> {
+                    errorLabel.setText("This account is currently locked.");
+                });
             }
 
             @Override
             public void onLockoutEnded() {
-                errorLabel.setText("Lockout ended. You may try again (up to " + UsersApp.getMaxFailedAttempts() + " attempts).");
-                errorLabel.setStyle("-fx-text-fill: #2e7d32;");
-                loginButton.setDisable(false);
+                // Requirement 1: Show message when thread finishes its silent sleep
+                Platform.runLater(() -> {
+                    errorLabel.setText("Lockout Ended. You may try again.");
+                    loginButton.setDisable(false);
+                });
             }
         });
     }

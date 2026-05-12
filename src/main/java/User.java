@@ -5,6 +5,9 @@ public class User implements Comparable<User> {
     private int failedAttempts;
     private boolean blocked;
     private long blockedTime;
+    private boolean timerRunning = false;
+    public boolean isTimerRunning() { return timerRunning; }
+    public void setTimerRunning(boolean running) { this.timerRunning = running; }
 
     public User(String username, String password) {
         validateUsername(username);
